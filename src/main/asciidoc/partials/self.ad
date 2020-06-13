@@ -1,0 +1,15 @@
+== !
+
+* Fuentes:
+
+** https://junit.org/junit4/[JUnit guide]
+** https://developer.android.com/training/testing/espresso[Espresso guide]
+** http://robolectric.org/[Robolectric guide]
+** https://joel-costigliola.github.io/assertj/[AssertJ Guide]
+
+
+
+[NOTE.speaker]
+====
+Para generar pdf incluir al final de la presentación lo siguiente: ?showNotes=separate-page&print-pdf
+====

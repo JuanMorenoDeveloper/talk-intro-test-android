@@ -1,0 +1,107 @@
+:icons: font
+:twitter-tag: UDE
+:conference-tag:
+:talk-tag: Intro Testing Android
+:linkattrs:
+ifndef::partials[:partials: partials]
+
+include::{partials}/footer.ad[]
+
+== Introducción a Testing en Android
+
+//== !
+//image::pattern-design-4pwbdv1y.jpg[background, size=auto]
+// Fuente: https://standaserigraf.wordpress.com/2015/09/30/pattern-design-tecnica-artistica-que-se-ocupa-de-la-creacion-de-patrones-graficos/
+== Librerías para Testing
+
+* JUnit
+* Robolectric
+* Espresso
+
+== JUnit
+
+Es un framework de test unitarios para Java y lenguajes basados en JVM.
+
+== Ejemplo
+
+[source,kotlin]
+----
+@Test //<1>
+fun givenValidUser_whenDoLogin_thenGetOk() {
+    val usuario = "user"
+    val password = "secret"
+    val resultadoExpected = "OK"
+    val login = LoginActivity()
+
+    val resultado = login.doCheck(usuario,password)//<2>
+
+    assertThat(resultado).isEqualTo(resultadoExpected)//<3>
+}
+----
+
+== Roboletric
+
+Robolectric es un framework que permite la ejecución de test Android sin la necesidad de un emulador.
+
+== Ejemplo
+
+[source,kotlin]
+----
+@RunWith(AndroidJUnit4::class)//<1>
+class LoginRobolectricTest {
+
+    @get:Rule
+    val rule = ActivityTestRule(LoginActivity::class.java)//<2>
+
+    @Test
+    fun givenValidUser_whenDoLogin_thenGetOk() {
+        onView(withId(R.id.edUsuario)).perform(typeText("user"))
+        onView(withId(R.id.edPassword)).perform(typeText("secret"))
+
+        onView(withId(R.id.btnLogin)).perform(click())//<3>
+
+        onView(withId(R.id.tvResultado)).check(matches(withText("OK"))) //<4>
+    }
+}
+----
+
+== Espresso
+
+Espresso es el framework recomendado para escribir test de UI sobre Android.
+
+== Ejemplo
+
+[source,kotlin]
+----
+@RunWith(AndroidJUnit4::class)
+class LoginInstrumentedTest {
+
+    @get:Rule
+    val rule = ActivityTestRule(LoginActivity::class.java)
+
+    @Test
+    fun givenValidUser_whenDoLogin_thenGetOk() {
+        onView(withId(R.id.edUsuario)).perform(typeText("user")).perform(closeSoftKeyboard())//<1>
+        onView(withId(R.id.edPassword)).perform(typeText("secret")).perform(closeSoftKeyboard())//<2>
+
+        onView(withId(R.id.btnLogin)).perform(click())
+
+        onView(withId(R.id.tvResultado)).check(matches(withText("OK")))
+    }
+}
+----
+
+== AssertJ
+
+AssertJ es una librería para escribir assertions fluidas para Java.
+
+== Ejemplo
+image::ide-completion.png[background, size=auto]
+
+== Conclusiones
+
+* Android es compatible con las librerías de Unit Test para Java.
+* Existen varias opciones disponibles según lo que deseemos probar.
+* La combinación de diferentes librerías y frameworks nos permite hacer un testing más completo y robusto sobre nuestra aplicación.
+
+include::{partials}/self.ad[]
