@@ -29,10 +29,11 @@ document.getElementsByTagName( 'head' )[0].appendChild( link );</script><!--[if 
 </div>
 <section id="_introducción_a_testing_en_android"><h2>Introducción a Testing en Android</h2></section>
 <section id="_librerías_para_testing"><h2>Librerías para Testing</h2><div class="ulist"><ul><li><p>JUnit</p></li><li><p>Robolectric</p></li><li><p>Espresso</p></li></ul></div></section>
-<section id="_junit"><h2>JUnit</h2><div class="paragraph"><p>Es un framework de test unitarios para Java y lenguajes basados en JVM.</p></div></section>
-<section id="_ejemplo"><h2>Ejemplo</h2><pre class="highlight listingblock"><code data-noescape class="kotlin language-kotlin">@Test <i class="conum" data-value="1"></i><b>(1)</b>
+<section><div class="imageblock" style=""><img src="./images/junit-logo.png" alt="junit logo"></div>
+<div class="paragraph"><p>JUnit es el framework más popular de test unitarios para Java y lenguajes basados en JVM.</p></div></section>
+<section id="_ejemplo"><h2>Ejemplo</h2><pre class="highlight listingblock"><code data-noescape class="kotlin language-kotlin">@Test
 fun givenValidUser_whenDoLogin_thenGetOk() {
-    val usuario = "user"
+    val usuario = "user"<i class="conum" data-value="1"></i><b>(1)</b>
     val password = "secret"
     val resultadoExpected = "OK"
     val login = LoginActivity()
@@ -40,8 +41,12 @@ fun givenValidUser_whenDoLogin_thenGetOk() {
     val resultado = login.doCheck(usuario,password)<i class="conum" data-value="2"></i><b>(2)</b>
 
     assertThat(resultado).isEqualTo(resultadoExpected)<i class="conum" data-value="3"></i><b>(3)</b>
-}</code></pre></section>
-<section id="_roboletric"><h2>Roboletric</h2><div class="paragraph"><p>Robolectric es un framework que permite la ejecución de test Android sin la necesidad de un emulador.</p></div></section>
+}</code></pre>
+<aside class="notes"><div class="paragraph"><p>Las partes de un test son:</p></div>
+<div class="olist arabic"><ol class="arabic"><li><p>Arrange: Preparación para ejecutar el test (Requisitos)</p></li><li><p>Act: Ejecución del caso de prueba</p></li><li><p>Assert: Validación de los reultados.</p></li></ol></div></aside></section>
+<section id="_requisitos_para_usar_junit"><h2>Requisitos para usar JUnit</h2><div class="olist arabic"><ol class="arabic"><li><p>Agregar las dependencia, para JUnit 4.13: <code>testImplementation 'junit:junit:4.13'</code></p></li><li><p>Anotar el método con <code>@Test</code></p></li><li><p>Escribir nuestro test y agregar assertions</p></li></ol></div></section>
+<section><div class="imageblock" style=""><img src="./images/robolectric-logo.png" alt="robolectric logo"></div>
+<div class="paragraph"><p>Robolectric es un framework que permite la ejecución de test Android sin la necesidad de un emulador o un dispositivo. Los tests de Roboletric se ejecutan directamente sobre la JVM de la workstation que se use para desarrollo.</p></div></section>
 <section id="_ejemplo_2"><h2>Ejemplo</h2><pre class="highlight listingblock"><code data-noescape class="kotlin language-kotlin">@RunWith(AndroidJUnit4::class)<i class="conum" data-value="1"></i><b>(1)</b>
 class LoginRobolectricTest {
 
@@ -50,15 +55,18 @@ class LoginRobolectricTest {
 
     @Test
     fun givenValidUser_whenDoLogin_thenGetOk() {
-        onView(withId(R.id.edUsuario)).perform(typeText("user"))
+        onView(withId(R.id.edUsuario)).perform(typeText("user"))<i class="conum" data-value="3"></i><b>(3)</b>
         onView(withId(R.id.edPassword)).perform(typeText("secret"))
 
-        onView(withId(R.id.btnLogin)).perform(click())<i class="conum" data-value="3"></i><b>(3)</b>
+        onView(withId(R.id.btnLogin)).perform(click())<i class="conum" data-value="4"></i><b>(4)</b>
 
-        onView(withId(R.id.tvResultado)).check(matches(withText("OK"))) <i class="conum" data-value="4"></i><b>(4)</b>
+        onView(withId(R.id.tvResultado)).check(matches(withText("OK"))) <i class="conum" data-value="5"></i><b>(5)</b>
     }
-}</code></pre></section>
-<section id="_espresso"><h2>Espresso</h2><div class="paragraph"><p>Espresso es el framework recomendado para escribir test de UI sobre Android.</p></div></section>
+}</code></pre>
+<aside class="notes"><div class="olist arabic"><ol class="arabic"><li><p>La anotación <code>@RunWith(AndroidJUnit4::class)</code> prepara a JUnit para la ejecución de tests con Android</p></li><li><p>La regla <code>ActivityTestRule</code> inicializa la <code>Activity</code> que vamos a usar en nuestro test.</p></li><li><p>Con <code>onView()</code> seleccionamos nuestro componente y con <code>perform()</code> ejecutamos acciones sobre él. <code>typeText()</code> ingresa texto en nuestro <code>editText</code>.</p></li><li><p><code>click()</code> ejecuta la acción click sobre nuestro botón.</p></li><li><p>Con <code>check()</code> ejecutamos nuestras assertions.</p></li></ol></div></aside></section>
+<section id="_características_de_roboletric"><h2>Características de Roboletric</h2><div class="ulist"><ul><li><p>A partir de la 4.0 usa el mismo API de Espresso</p></li><li><p>Con el método <code>onView()</code> podemos seleccionar componentes.</p></li><li><p>El método <code>perform()</code> nos sirve para ejecutar acciones.</p></li><li><p>Las assertions las manejamos con el método <code>check()</code>.</p></li></ul></div></section>
+<section><div class="imageblock" style=""><img src="./images/espresso.jpg" alt="espresso"></div>
+<div class="paragraph"><p>Espresso es el framework recomendado para escribir test de UI sobre Android. Los test escritos con Espresso se ejecutan en dispositivos físicos o emuladores.</p></div></section>
 <section id="_ejemplo_3"><h2>Ejemplo</h2><pre class="highlight listingblock"><code data-noescape class="kotlin language-kotlin">@RunWith(AndroidJUnit4::class)
 class LoginInstrumentedTest {
 
@@ -68,14 +76,18 @@ class LoginInstrumentedTest {
     @Test
     fun givenValidUser_whenDoLogin_thenGetOk() {
         onView(withId(R.id.edUsuario)).perform(typeText("user")).perform(closeSoftKeyboard())<i class="conum" data-value="1"></i><b>(1)</b>
-        onView(withId(R.id.edPassword)).perform(typeText("secret")).perform(closeSoftKeyboard())<i class="conum" data-value="2"></i><b>(2)</b>
+        onView(withId(R.id.edPassword)).perform(typeText("secret")).perform(closeSoftKeyboard())
 
         onView(withId(R.id.btnLogin)).perform(click())
 
         onView(withId(R.id.tvResultado)).check(matches(withText("OK")))
     }
-}</code></pre></section>
-<section id="_assertj"><h2>AssertJ</h2><div class="paragraph"><p>AssertJ es una librería para escribir assertions fluidas para Java.</p></div></section>
+}</code></pre>
+<aside class="notes"><div class="olist arabic"><ol class="arabic"><li><p>Cuando se ingresa texto sobre componentes gráficos en un emulador o un dispositivo físico es necesario cerrar el teclado virtual, para ello se usa la función <code>closeSoftKeyboard()</code></p></li></ol></div></aside></section>
+<section id="_características_de_espresso"><h2>Características de Espresso</h2><div class="ulist"><ul><li><p>El API de espresso tiene 4 componentes:</p><div class="ulist"><ul><li><p>Espresso: Punto de entrada del API</p></li><li><p>ViewMatchers: Selección de vistas</p></li><li><p>ViewActions: Acciones</p></li><li><p>ViewAssertions: Assertions</p></li></ul></div></li></ul></div></section>
+<section id="_assertj"><h2>AssertJ</h2><div class="paragraph"><p>AssertJ es una librería para escribir assertions fluidas para Java. Nos provee una gran variedad de assertions con mensajes de error útiles, mejorando así la legibilidad de los tests.</p></div>
+<div class="paragraph"><p>Para comenzarla a usar solo debemos agregar la dependencia a nuestro proyecto:
+<code>testImplementation("org.assertj:assertj-core:3.16.1")</code></p></div></section>
 <section id="_ejemplo_4" data-background-image="./images/ide-completion.png" data-background-size="auto"><h2>Ejemplo</h2></section>
 <section id="_conclusiones"><h2>Conclusiones</h2><div class="ulist"><ul><li><p>Android es compatible con las librerías de Unit Test para Java.</p></li><li><p>Existen varias opciones disponibles según lo que deseemos probar.</p></li><li><p>La combinación de diferentes librerías y frameworks nos permite hacer un testing más completo y robusto sobre nuestra aplicación.</p></li></ul></div></section>
 <section><div class="ulist"><ul><li><p>Fuentes:</p><div class="ulist"><ul><li><p><a href="https://junit.org/junit4/">JUnit guide</a></p></li><li><p><a href="https://developer.android.com/training/testing/espresso">Espresso guide</a></p></li><li><p><a href="http://robolectric.org/">Robolectric guide</a></p></li><li><p><a href="https://joel-costigliola.github.io/assertj/">AssertJ Guide</a></p></li></ul></div></li></ul></div>

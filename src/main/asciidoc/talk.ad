@@ -18,17 +18,19 @@ include::{partials}/footer.ad[]
 * Robolectric
 * Espresso
 
-== JUnit
+== !
 
-Es un framework de test unitarios para Java y lenguajes basados en JVM.
+image::junit-logo.png[size=auto]
+
+JUnit es el framework más popular de test unitarios para Java y lenguajes basados en JVM.
 
 == Ejemplo
 
 [source,kotlin]
 ----
-@Test //<1>
+@Test
 fun givenValidUser_whenDoLogin_thenGetOk() {
-    val usuario = "user"
+    val usuario = "user"//<1>
     val password = "secret"
     val resultadoExpected = "OK"
     val login = LoginActivity()
@@ -38,10 +40,29 @@ fun givenValidUser_whenDoLogin_thenGetOk() {
     assertThat(resultado).isEqualTo(resultadoExpected)//<3>
 }
 ----
+[NOTE.speaker]
+====
+Las partes de un test son:
 
-== Roboletric
+1. Arrange: Preparación para ejecutar el test (Requisitos)
 
-Robolectric es un framework que permite la ejecución de test Android sin la necesidad de un emulador.
+2. Act: Ejecución del caso de prueba
+
+3. Assert: Validación de los reultados.
+====
+
+== Requisitos para usar JUnit
+
+1. Agregar las dependencia, para JUnit 4.13: `testImplementation 'junit:junit:4.13'`
+
+2. Anotar el método con `@Test`
+
+3. Escribir nuestro test y agregar assertions
+
+== !
+image::robolectric-logo.png[size=auto]
+
+Robolectric es un framework que permite la ejecución de test Android sin la necesidad de un emulador o un dispositivo. Los tests de Roboletric se ejecutan directamente sobre la JVM de la workstation que se use para desarrollo.
 
 == Ejemplo
 
@@ -55,19 +76,39 @@ class LoginRobolectricTest {
 
     @Test
     fun givenValidUser_whenDoLogin_thenGetOk() {
-        onView(withId(R.id.edUsuario)).perform(typeText("user"))
+        onView(withId(R.id.edUsuario)).perform(typeText("user"))//<3>
         onView(withId(R.id.edPassword)).perform(typeText("secret"))
 
-        onView(withId(R.id.btnLogin)).perform(click())//<3>
+        onView(withId(R.id.btnLogin)).perform(click())//<4>
 
-        onView(withId(R.id.tvResultado)).check(matches(withText("OK"))) //<4>
+        onView(withId(R.id.tvResultado)).check(matches(withText("OK"))) //<5>
     }
 }
 ----
+[NOTE.speaker]
+====
+1. La anotación `@RunWith(AndroidJUnit4::class)` prepara a JUnit para la ejecución de tests con Android
 
-== Espresso
+2. La regla `ActivityTestRule` inicializa la `Activity` que vamos a usar en nuestro test.
 
-Espresso es el framework recomendado para escribir test de UI sobre Android.
+3. Con `onView()` seleccionamos nuestro componente y con `perform()` ejecutamos acciones sobre él. `typeText()` ingresa texto en nuestro `editText`.
+
+4. `click()` ejecuta la acción click sobre nuestro botón.
+
+5. Con `check()` ejecutamos nuestras assertions.
+====
+
+== Características de Roboletric
+
+* A partir de la 4.0 usa el mismo API de Espresso
+* Con el método `onView()` podemos seleccionar componentes.
+* El método `perform()` nos sirve para ejecutar acciones.
+* Las assertions las manejamos con el método `check()`.
+
+== !
+image::espresso.jpg[size=auto]
+
+Espresso es el framework recomendado para escribir test de UI sobre Android. Los test escritos con Espresso se ejecutan en dispositivos físicos o emuladores.
 
 == Ejemplo
 
@@ -82,7 +123,7 @@ class LoginInstrumentedTest {
     @Test
     fun givenValidUser_whenDoLogin_thenGetOk() {
         onView(withId(R.id.edUsuario)).perform(typeText("user")).perform(closeSoftKeyboard())//<1>
-        onView(withId(R.id.edPassword)).perform(typeText("secret")).perform(closeSoftKeyboard())//<2>
+        onView(withId(R.id.edPassword)).perform(typeText("secret")).perform(closeSoftKeyboard())
 
         onView(withId(R.id.btnLogin)).perform(click())
 
@@ -90,10 +131,25 @@ class LoginInstrumentedTest {
     }
 }
 ----
+[NOTE.speaker]
+====
+1. Cuando se ingresa texto sobre componentes gráficos en un emulador o un dispositivo físico es necesario cerrar el teclado virtual, para ello se usa la función `closeSoftKeyboard()`
+====
+
+== Características de Espresso
+
+* El API de espresso tiene 4 componentes:
+** Espresso: Punto de entrada del API
+** ViewMatchers: Selección de vistas
+** ViewActions: Acciones
+** ViewAssertions: Assertions
 
 == AssertJ
 
-AssertJ es una librería para escribir assertions fluidas para Java.
+AssertJ es una librería para escribir assertions fluidas para Java. Nos provee una gran variedad de assertions con mensajes de error útiles, mejorando así la legibilidad de los tests.
+
+Para comenzarla a usar solo debemos agregar la dependencia a nuestro proyecto:
+`testImplementation("org.assertj:assertj-core:3.16.1")`
 
 == Ejemplo
 image::ide-completion.png[background, size=auto]
